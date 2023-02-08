@@ -5,10 +5,11 @@ import org.quiltmc.qsl.base.api.entrypoint.ModInitializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-object ExampleMod : ModInitializer {
-    val LOGGER: Logger = LoggerFactory.getLogger("Example Mod")
+object ExplosionReversal : ModInitializer {
+    val LOGGER: Logger = LoggerFactory.getLogger("Explosion Reversal")
 
     override fun onInitialize(mod: ModContainer) {
         LOGGER.info("Hello Quilt world from {}!", mod.metadata()?.name())
+
     }
 }
