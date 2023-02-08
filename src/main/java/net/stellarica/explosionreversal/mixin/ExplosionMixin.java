@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -28,7 +29,7 @@ public class ExplosionMixin {
 					value = "INVOKE",
 					target = "Lnet/minecraft/block/Block;onDestroyedByExplosion(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/explosion/Explosion;)V",
 					shift = At.Shift.BY,
-					by = -3
+					by = -9
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
@@ -36,4 +37,15 @@ public class ExplosionMixin {
 		ExplosionReversal.INSTANCE.getLOGGER().warn("Exploded: " + world.getBlockState(blockPos) + " " + state);
 	}
 
+
+	@Redirect(
+			method = "affectWorld",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/block/Block;shouldDropItemsOnExplosion(Lnet/minecraft/world/explosion/Explosion;)Z"
+			)
+	)
+	boolean preventItemDrops(Block instance, Explosion explosion) {
+		return false;
+	}
 }
