@@ -1,0 +1,47 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "net.stellarica",
+		"id": "explosionreversal",
+		"version": "${version}",
+		"metadata": {
+			"name": "Explosion Reversal",
+			"description": "Server-side mod to rollback explosions",
+			"contributors": {
+				"trainb0y": "Author"
+			},
+			"contact": {
+				"homepage": "https://stellarica.net/",
+				"issues": "https://github.com/Stellarica/ExplosionReversal/issues",
+				"sources": "https://github.com/Stellarica/ExplosionReversal"
+			},
+			"icon": "assets/explosionreversal/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"init": {
+				"adapter": "kotlin",
+				"value": "net.stellarica.explosionreversal.ExplosionReversal"
+			}
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.17.0-"
+			},
+			{
+				"id": "quilted_fabric_api",
+				"versions": ">=4.0.0-"
+			},
+			{
+				"id": "qkl",
+				"versions": ">=0.1.4-"
+			},
+			{
+				"id": "minecraft",
+				"versions": ">=1.19.2"
+			}
+		]
+	},
+	"mixin": "explosionreversal.mixins.json"
+}
