@@ -1,6 +1,9 @@
 package net.stellarica.explosionreversal.mixin;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -23,12 +26,14 @@ public class ExplosionMixin {
 			method = "affectWorld",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z",
-					shift = At.Shift.BEFORE
+					target = "Lnet/minecraft/block/Block;onDestroyedByExplosion(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/explosion/Explosion;)V",
+					shift = At.Shift.BY,
+					by = -3
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	void onBlockExplode(boolean particles, CallbackInfo ci, boolean idk, ObjectListIterator idc, BlockPos blockPos) {
-		ExplosionReversal.INSTANCE.getLOGGER().warn("Exploded: " + world.getBlockState(blockPos));
+	void onBlockExplode(boolean particles, CallbackInfo ci, boolean aa, ObjectArrayList l, boolean idk, ObjectListIterator idc, BlockPos blockPos, BlockState state, Block block) {
+		ExplosionReversal.INSTANCE.getLOGGER().warn("Exploded: " + world.getBlockState(blockPos) + " " + state);
 	}
+
 }
