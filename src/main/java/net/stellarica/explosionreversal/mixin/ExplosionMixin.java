@@ -2,9 +2,11 @@ package net.stellarica.explosionreversal.mixin;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
+import kotlin.random.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.stellarica.explosionreversal.ExplosionReversal;
@@ -23,6 +25,7 @@ public class ExplosionMixin {
 	@Final
 	@Shadow
 	private World world;
+	@SuppressWarnings("rawtypes")
 	@Inject(
 			method = "affectWorld",
 			at = @At(
@@ -33,8 +36,14 @@ public class ExplosionMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	void onBlockExplode(boolean particles, CallbackInfo ci, boolean aa, ObjectArrayList l, boolean idk, ObjectListIterator idc, BlockPos blockPos, BlockState state, Block block) {
-		ExplosionReversal.INSTANCE.getLOGGER().warn("Exploded: " + world.getBlockState(blockPos) + " " + state);
+	void onBlockExplode(boolean particles, CallbackInfo ci, boolean a, ObjectArrayList b, boolean c, ObjectListIterator d, BlockPos blockPos, BlockState state, Block block) {
+		ExplosionReversal.INSTANCE.getQueue().add(new ExplosionReversal.ExplosionReversalData(
+				System.currentTimeMillis() + ExplosionReversal.INSTANCE.getRegenTime() + Random.Default.nextInt(30000),
+				blockPos,
+				world,
+				state,
+				state.hasBlockEntity() ? world.getBlockEntity(blockPos) : null
+		));
 	}
 
 
