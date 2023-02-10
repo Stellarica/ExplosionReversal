@@ -6,10 +6,10 @@ import kotlin.random.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.stellarica.explosionreversal.ExplosionReversal;
+import net.stellarica.explosionreversal.ExplosionReversalData;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,13 +37,15 @@ public class ExplosionMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	void onBlockExplode(boolean particles, CallbackInfo ci, boolean a, ObjectArrayList b, boolean c, ObjectListIterator d, BlockPos blockPos, BlockState state, Block block) {
-		ExplosionReversal.INSTANCE.getQueue().add(new ExplosionReversal.ExplosionReversalData(
+		if (state.isAir()) return;
+		ExplosionReversal.INSTANCE.getQueue().add(new ExplosionReversalData(
 				System.currentTimeMillis() + ExplosionReversal.INSTANCE.getRegenTime() + Random.Default.nextInt(30000),
 				blockPos,
 				world,
 				state,
-				state.hasBlockEntity() ? world.getBlockEntity(blockPos) : null
+				state.hasBlockEntity() ? world.getBlockEntity(blockPos).toIdentifiedLocatedNbt() : null
 		));
+		if (state.hasBlockEntity()) world.removeBlockEntity(blockPos); // easy way to get them to not drop items
 	}
 
 
